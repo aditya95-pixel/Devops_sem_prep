@@ -60,3 +60,91 @@ Plan → Code → Build → Test → Release → Deploy → Operate → Monitor 
 | Monitor   | Prometheus, Grafana     |
 
 ---
+
+Here’s the exam-ready Markdown answer for **Q2** 👇
+
+---
+
+## **Q2.A. What is Git?**
+
+* **Git** is a **distributed version control system (VCS)** used to track changes in source code.
+* Created by **Linus Torvalds** in 2005 for Linux kernel development.
+* Key features:
+
+  * **Distributed**: Every developer has a full copy of the repository.
+  * **Efficient branching & merging**.
+  * **Keeps history of changes** (commits).
+  * **Collaboration** using platforms like GitHub, GitLab, Bitbucket.
+
+---
+
+## **Q2.B. Git Life Cycle**
+
+### **States in Git**
+
+1. **Working Directory** → Your local files (can be modified).
+2. **Staging Area (Index)** → Selected changes that will go into the next commit.
+3. **Local Repository** → Committed snapshots stored in `.git`.
+4. **Remote Repository** → Central/shared repo (e.g., GitHub).
+
+### **Diagram**
+
+```
+Working Directory  →  Staging Area  →  Local Repository  →  Remote Repository
+   (git add)            (git commit)         (git push)
+   (git checkout)       (git reset)          (git fetch/pull)
+```
+
+### **Explanation**
+
+* **git add** → Moves changes from Working Directory → Staging Area.
+* **git commit** → Saves staged changes into Local Repository.
+* **git push** → Uploads local commits to Remote Repository.
+* **git pull/fetch** → Downloads changes from Remote Repository.
+* **git checkout** → Switch branches or restore files.
+
+---
+
+## **Q2.C. Branching and Merging in Git**
+
+### **Branching**
+
+* A **branch** is a lightweight movable pointer to a commit.
+* Default branch is usually **main** or **master**.
+* Allows parallel development (e.g., feature branch, bug-fix branch).
+
+Example:
+
+```bash
+git branch feature-login
+git checkout feature-login
+```
+
+### **Merging**
+
+* **Merge** combines changes from one branch into another (e.g., merging feature branch into main).
+* Command:
+
+```bash
+git checkout main
+git merge feature-login
+```
+
+### **Merge Conflicts**
+
+* Occur when **two branches modify the same part of a file differently**.
+* Git cannot automatically decide which change to keep.
+* Developer must **manually resolve** conflicts.
+
+**Example of conflict:**
+
+```diff
+<<<<<<< HEAD
+print("Hello from main branch")
+=======
+print("Hello from feature branch")
+>>>>>>> feature-login
+```
+
+---
+
