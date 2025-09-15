@@ -478,3 +478,86 @@ git revert <commit_id>
 | **Command**  | `git revert <commit_id>`                              | `git reset --soft/mixed/hard <commit_id>`           |
 
 ---
+
+## **Q7.A. Steps to Connect Local Git Repository with Remote Repository**
+
+1. **Initialize a local repository** (if not already done):
+
+```bash
+git init
+```
+
+2. **Add files & commit**:
+
+```bash
+git add .
+git commit -m "Initial commit"
+```
+
+3. **Add the remote repository URL**:
+
+```bash
+git remote add origin <remote_repo_url>
+```
+
+*(Example: `git remote add origin https://github.com/user/project.git`)*
+
+4. **Verify the remote**:
+
+```bash
+git remote -v
+```
+
+5. **Push local commits to remote repository**:
+
+```bash
+git push -u origin main
+```
+
+*(Replace `main` with branch name if different)*
+
+---
+
+## **Q7.B. Difference Between `git fetch` and `git pull`**
+
+| **Aspect**   | **git fetch**                             | **git pull**                                     |
+| ------------ | ----------------------------------------- | ------------------------------------------------ |
+| **Action**   | Downloads commits/branches from remote    | Downloads + merges changes into local branch     |
+| **Merging**  | Does **not** merge automatically          | Automatically merges into current branch         |
+| **Use Case** | Safe way to see what’s new before merging | Directly update local branch with remote changes |
+| **Command**  | `git fetch origin`                        | `git pull origin main`                           |
+
+---
+
+## **Q7.C. Steps to Avoid Merge Conflicts**
+
+1. **Always pull latest changes before starting new work**:
+
+```bash
+git pull origin main
+```
+
+2. **Work on separate feature branches** instead of directly on `main`.
+
+3. **Commit changes frequently** with clear messages.
+
+4. **Communicate with team** to avoid editing the same files simultaneously.
+
+5. **Use smaller, focused commits** → easier to merge.
+
+6. **Resolve conflicts locally before pushing**:
+
+   * Check conflict with:
+
+     ```bash
+     git status
+     ```
+   * Open file, manually fix `<<<<<<<` and `>>>>>>>` markers.
+   * Stage and commit after resolving:
+
+     ```bash
+     git add <file>
+     git commit -m "Resolved merge conflict"
+     ```
+
+---
