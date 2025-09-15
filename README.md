@@ -895,3 +895,119 @@ pipeline {
 5. **post** → Actions after pipeline (success/failure).
 
 ---
+
+## **Q16. Jenkinsfile Examples**
+
+### **i) Jenkinsfile with Single Stage**
+
+```groovy
+pipeline {
+    agent any
+    stages {
+        stage('Build') {
+            steps {
+                echo 'Building the application...'
+                sh 'mvn clean install'
+            }
+        }
+    }
+}
+```
+
+---
+
+### **ii) Jenkinsfile with Multiple Stages**
+
+```groovy
+pipeline {
+    agent any
+    stages {
+        stage('Build') {
+            steps {
+                echo 'Building the application...'
+                sh 'mvn clean install'
+            }
+        }
+        stage('Test') {
+            steps {
+                echo 'Running tests...'
+                sh 'mvn test'
+            }
+        }
+        stage('Deploy') {
+            steps {
+                echo 'Deploying the application...'
+                sh 'docker-compose up -d'
+            }
+        }
+    }
+    post {
+        always {
+            echo 'Pipeline completed.'
+        }
+    }
+}
+```
+
+---
+
+## **Q17. Maven**
+
+* **Definition**:
+  Apache Maven is a **build automation and project management tool** primarily used for **Java-based projects**.
+
+* **Uses**:
+
+  * Automates **compiling, packaging, and deploying** code.
+  * Manages **dependencies** via a central repository (`pom.xml`).
+  * Provides **lifecycle management** (compile → test → package → install → deploy).
+  * Standardizes project structure.
+
+---
+
+## **Q18. Options to Use Maven in Jenkins Projects**
+
+1. **Install Maven on Jenkins server**
+
+   * Configure under: `Manage Jenkins → Global Tool Configuration → Maven`.
+
+2. **Use Maven wrapper (mvnw)** inside the project repository.
+
+   * Ensures consistent Maven version across environments.
+
+3. **Download/Install Maven plugin for Jenkins**
+
+   * Automates Maven installation and configuration.
+
+4. **Use Docker container with Maven pre-installed** in the Jenkins pipeline.
+
+---
+
+## **Q19. Need for Tools and Their Management in Jenkins**
+
+* **Why tools are needed**:
+
+  * Jenkins itself is just an automation server → It requires tools like **Git, Maven, Gradle, JDK, Docker, Kubernetes** to build, test, and deploy applications.
+
+* **Tool Management in Jenkins**:
+
+  1. **Centralized Configuration**
+
+     * Tools configured in: `Manage Jenkins → Global Tool Configuration`.
+     * Ensures consistent versions across jobs.
+
+  2. **Automation**
+
+     * Jenkins can automatically download tools (like Maven, JDK) if not installed.
+
+  3. **Flexibility**
+
+     * Jobs can specify different tool versions for different projects.
+
+  4. **Integration**
+
+     * Plugins connect Jenkins to tools (e.g., Git plugin, Maven plugin, Docker plugin).
+
+Tool management ensures **consistency, reproducibility, and automation** in the CI/CD pipeline.
+
+---
