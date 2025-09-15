@@ -783,3 +783,115 @@ Developer → GitHub → Jenkins Build → Jenkins Test → Jenkins Deploy → P
   * Slave 3 → Deploys Docker containers.
 
 ---
+
+## **Q11. Essential Components of the Jenkins Master**
+
+* **Job Scheduler** → Schedules and assigns build jobs to slaves/agents.
+* **Web UI/Dashboard** → Provides graphical interface to manage jobs, builds, and configurations.
+* **Configuration Manager** → Stores job configurations, credentials, and environment details.
+* **Plugin Manager** → Handles installation, updates, and removal of plugins.
+* **Build Queue** → Maintains pending build requests.
+* **Security Manager** → Controls authentication, authorization, and user permissions.
+* **Executor (on master node)** → Runs builds directly (though usually jobs run on slaves).
+
+---
+
+## **Q12. Plugins in Jenkins**
+
+* **Definition** → Plugins are extensions that enhance Jenkins functionality.
+* **Value Addition**
+
+  * Integrate with tools (Git, Maven, Gradle, Docker, Kubernetes).
+  * Enable CI/CD pipeline stages (Build, Test, Deploy).
+  * Provide UI enhancements (e.g., Blue Ocean plugin).
+  * Add integrations with cloud platforms (AWS, GCP, Azure).
+  * Support monitoring, notifications (Slack, Email).
+
+---
+
+## **Q13. Steps for Plugin Management in Jenkins**
+
+**i) Check for plugins already installed**
+
+* Navigate to: `Dashboard → Manage Jenkins → Manage Plugins → Installed` tab.
+
+**ii) Search for a particular plugin**
+
+* Go to: `Dashboard → Manage Jenkins → Manage Plugins → Available` tab.
+* Enter plugin name in the **Search box**.
+
+**iii) Install the plugin**
+
+* Select the plugin → Click **Install without restart** (or **Download now and install after restart**).
+
+**iv) Restart Jenkins after installation**
+
+* Option 1: Run in browser → `http://<your-server>:8080/restart`
+* Option 2: From CLI →
+
+  ```bash
+  sudo systemctl restart jenkins
+  ```
+* Option 3: After installation, check “Restart Jenkins when installation is complete”.
+
+---
+
+## **Q14. Jenkins File**
+
+* A **Jenkinsfile** is a text file that defines a Jenkins pipeline using **Groovy DSL**.
+* Stored in the project repository (`Jenkinsfile`).
+* Benefits:
+
+  * Code-as-configuration → Pipeline versioned with source code.
+  * Standardization → Same build/deploy process for all team members.
+  * Automation → Full CI/CD pipeline execution.
+
+---
+
+## **Q15. Typical Structure of a Jenkins File**
+
+Example **Declarative Pipeline**:
+
+```groovy
+pipeline {
+    agent any     // Run on any available agent
+    stages {
+        stage('Build') {
+            steps {
+                echo 'Building the application...'
+                sh 'mvn clean install'
+            }
+        }
+        stage('Test') {
+            steps {
+                echo 'Running tests...'
+                sh 'mvn test'
+            }
+        }
+        stage('Deploy') {
+            steps {
+                echo 'Deploying application...'
+                sh 'docker-compose up -d'
+            }
+        }
+    }
+    post {
+        success {
+            echo 'Pipeline executed successfully.'
+        }
+        failure {
+            echo 'Pipeline failed.'
+        }
+    }
+}
+```
+
+### **Structure Breakdown**
+
+1. **pipeline** → Root block.
+2. **agent** → Defines execution node.
+3. **stages** → Multiple stages like Build, Test, Deploy.
+4. **steps** → Commands executed inside each stage.
+5. **post** → Actions after pipeline (success/failure).
+
+---
