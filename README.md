@@ -144,3 +144,57 @@ print("Hello from feature branch")
 
 ---
 
+
+## **Q3.A. Why is the Agile Model Preferred over the Waterfall Model?**
+
+### **Agile Model**
+
+* Iterative and incremental approach.
+* Continuous feedback and collaboration with stakeholders.
+* Working software delivered in **short cycles (sprints)**.
+
+### **Reasons Agile is Preferred over Waterfall**
+
+1. **Flexibility** → Agile adapts to changing requirements; Waterfall is rigid.
+2. **Early Delivery** → Agile delivers working software frequently; Waterfall delivers only at the end.
+3. **Customer Satisfaction** → Agile involves customers throughout; Waterfall only at requirements & delivery stages.
+4. **Risk Reduction** → Problems are identified early in Agile; in Waterfall, risks appear late.
+5. **Collaboration** → Agile emphasizes teamwork & communication; Waterfall has siloed phases.
+
+**Summary Table**
+
+| Aspect               | Waterfall Model      | Agile Model             |
+| -------------------- | -------------------- | ----------------------- |
+| Process              | Sequential           | Iterative & Incremental |
+| Flexibility          | Rigid                | Highly adaptable        |
+| Delivery             | At the end           | Continuous (sprints)    |
+| Testing              | After implementation | Ongoing in each sprint  |
+| Customer Involvement | Low                  | High                    |
+
+---
+
+## **Q3.B. Difference between Lean & Agile Models**
+
+### **Lean Model**
+
+* Origin: Lean manufacturing (Toyota Production System).
+* Focus: **Eliminate waste, maximize value, optimize processes**.
+* Principles: Reduce bottlenecks, ensure continuous flow, focus on efficiency.
+
+### **Agile Model**
+
+* Origin: Agile Manifesto (2001).
+* Focus: **Iterative development, customer collaboration, responding to change**.
+* Principles: Working software, collaboration, adaptability.
+
+### **Key Differences**
+
+| **Aspect**   | **Lean**                                   | **Agile**                              |
+| ------------ | ------------------------------------------ | -------------------------------------- |
+| Origin       | Lean Manufacturing (Toyota)                | Software Development (Agile Manifesto) |
+| Focus        | Efficiency & Waste Reduction               | Flexibility & Customer Collaboration   |
+| Primary Goal | Deliver value faster with fewer resources  | Deliver working software in iterations |
+| Approach     | Optimize workflow & remove non-value tasks | Iterative development with feedback    |
+| Tools        | Kanban, Value Stream Mapping               | Scrum, XP, Kanban                      |
+
+---
