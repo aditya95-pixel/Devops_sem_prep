@@ -694,3 +694,92 @@ pipeline {
 * **withCredentials** → Uses Jenkins stored credentials (`github-creds`).
 
 ---
+
+## **Q6. Workflow to Achieve CI/CD in Jenkins**
+
+### **Steps**
+
+1. **Developer pushes code** → Code is committed to GitHub/GitLab.
+2. **Jenkins detects changes** (via webhook or polling).
+3. **Build stage** → Jenkins compiles code (e.g., Maven/Gradle).
+4. **Test stage** → Unit, integration, and regression tests run.
+5. **Package stage** → Build artifacts (e.g., JAR, WAR, Docker image).
+6. **Deploy stage** → Code is deployed to staging/production environment.
+7. **Monitor stage** → Application monitored with Prometheus/Grafana.
+
+### **Workflow Diagram (Textual)**
+
+```
+Developer → GitHub → Jenkins Build → Jenkins Test → Jenkins Deploy → Production → Monitor
+```
+
+---
+
+## **Q7. Jenkins Architecture for CI/CD**
+
+### **Components**
+
+1. **Jenkins Master**
+
+   * Central server that manages jobs, schedules builds, and monitors slaves.
+   * Provides web UI (dashboard).
+   * Stores job configuration and plugin management.
+
+2. **Jenkins Slave (Agent)**
+
+   * Executes jobs assigned by the master.
+   * Can run on different OS, environments, or containers.
+   * Useful for distributed builds.
+
+### **Architecture Flow**
+
+```
+           +------------------+
+           |   Jenkins Master |
+           +------------------+
+             |    Schedules
+             v
+     +------------------+   +------------------+
+     | Jenkins Slave 1  |   | Jenkins Slave 2  |
+     | (Linux Build)    |   | (Windows Build)  |
+     +------------------+   +------------------+
+             |
+             v
+         Build / Test / Deploy
+```
+
+---
+
+## **Q8. Steps to Check Log File After Starting the BUILD for a Jenkins Job**
+
+1. Open Jenkins Dashboard.
+2. Click on the **Job Name** you triggered.
+3. Select the specific **Build Number** (e.g., `#15`).
+4. Click **Console Output**.
+5. The **log file** will display build progress, errors, or success messages in real time.
+
+---
+
+## **Q9. Need for Jenkins Master-Slave Architecture**
+
+* **Scalability** → Distributes build jobs across multiple agents.
+* **Load balancing** → Prevents single machine overload.
+* **Cross-platform builds** → Run builds on different OS (Linux, Windows, macOS).
+* **Faster execution** → Parallel builds across multiple slaves.
+* **Flexibility** → Slaves can be provisioned dynamically in the cloud (e.g., AWS EC2, Kubernetes).
+
+---
+
+## **Q10. Role of the Slave in Master-Slave Architecture**
+
+* **Execution agent** that runs build/test/deploy tasks assigned by the master.
+* **Reports status** (success/failure) back to master.
+* Can be configured for **specific environments** (e.g., one slave with Java, another with Python).
+* **Parallelism** → Multiple slaves allow concurrent builds.
+* Example:
+
+  * Slave 1 → Builds Java application.
+  * Slave 2 → Runs Selenium UI tests.
+  * Slave 3 → Deploys Docker containers.
+
+---
