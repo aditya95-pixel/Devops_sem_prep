@@ -397,3 +397,84 @@ A file in Git can be in **four main states**:
 | Committed  | Changes saved in local repo permanently | `git commit -m "message"` |
 
 ---
+
+## **Q6.A. Command to Check Difference Between Staging Area and Local Copy**
+
+* Command:
+
+```bash
+git diff
+```
+
+* **Explanation**:
+
+  * Shows changes between the **working directory (local copy)** and the **staging area**.
+  * If you want to see changes between **staging area and last commit**, use:
+
+    ```bash
+    git diff --cached
+    ```
+
+---
+
+## **Q6.B. Command to View the History of Commits**
+
+* Command:
+
+```bash
+git log
+```
+
+* **Options**:
+
+  * `git log --oneline` → Shows commit history in short form.
+  * `git log --graph --oneline --decorate --all` → Shows commit history in a visual graph.
+
+---
+
+## **Q6.C. How to Roll Back to Your Previous Commit**
+
+Several ways depending on use case:
+
+1. **Soft Reset** (keep changes staged):
+
+```bash
+git reset --soft HEAD~1
+```
+
+2. **Mixed Reset** (keep changes in working directory):
+
+```bash
+git reset --mixed HEAD~1
+```
+
+3. **Hard Reset** (discard changes completely):
+
+```bash
+git reset --hard HEAD~1
+```
+
+4. **Checkout Previous Commit (read-only)**:
+
+```bash
+git checkout <commit_id>
+```
+
+5. **Revert Commit (creates new commit that undoes previous one)**:
+
+```bash
+git revert <commit_id>
+```
+
+---
+
+## **Q6.D. Difference Between `git revert` and `git reset`**
+
+| **Aspect**   | **git revert**                                        | **git reset**                                       |
+| ------------ | ----------------------------------------------------- | --------------------------------------------------- |
+| **Action**   | Creates a new commit that undoes the specified commit | Moves HEAD pointer to a previous commit             |
+| **History**  | Preserves history (safe for shared repos)             | Rewrites history (can cause issues in shared repos) |
+| **Use Case** | Safely undo a commit in public repositories           | Roll back local changes or delete commits           |
+| **Command**  | `git revert <commit_id>`                              | `git reset --soft/mixed/hard <commit_id>`           |
+
+---
