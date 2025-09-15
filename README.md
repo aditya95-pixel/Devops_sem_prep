@@ -290,3 +290,110 @@ Plan → Code → Build → Test → Release → Deploy → Operate → Monitor 
 8. **Monitor** → Logs & metrics (Prometheus, ELK, Grafana).
 
 ---
+
+## **Q5.A. Git Workflow and Commands**
+
+### **Git Workflow Phases**
+
+Git follows a **four-phase workflow** for tracking files:
+
+1. **Working Directory**
+
+   * Files are modified locally.
+   * Command:
+
+     ```bash
+     git status     # check current changes
+     ```
+
+2. **Staging Area (Index)**
+
+   * Selected files are staged (prepared) for commit.
+   * Commands:
+
+     ```bash
+     git add <file>      # stage a specific file
+     git add .           # stage all changes
+     ```
+
+3. **Local Repository**
+
+   * Staged changes are committed to the local `.git` repository.
+   * Commands:
+
+     ```bash
+     git commit -m "Commit message"
+     ```
+
+4. **Remote Repository**
+
+   * Local commits are pushed to a shared repository (e.g., GitHub).
+   * Commands:
+
+     ```bash
+     git push origin <branch>
+     git pull origin <branch>   # fetch + merge remote changes
+     ```
+
+---
+
+### **Diagram of Git Workflow**
+
+```
+Working Directory  --(git add)-->  Staging Area  --(git commit)-->  Local Repo  --(git push)-->  Remote Repo
+```
+
+---
+
+## **Q5.B. Different Statuses of a Git File**
+
+A file in Git can be in **four main states**:
+
+1. **Untracked**
+
+   * File is new and not yet tracked by Git.
+   * Command:
+
+     ```bash
+     git status   # shows "untracked file"
+     ```
+
+2. **Modified**
+
+   * File is tracked, but changes have been made and not staged yet.
+   * Command:
+
+     ```bash
+     git diff <file>
+     ```
+
+3. **Staged**
+
+   * File changes are added to the **staging area** (ready to commit).
+   * Command:
+
+     ```bash
+     git add <file>
+     ```
+
+4. **Committed**
+
+   * File is saved permanently in the **local repository**.
+   * Command:
+
+     ```bash
+     git commit -m "message"
+     ```
+
+---
+
+### **Summary Table**
+
+| **Status** | **Meaning**                             | **Command Example**       |
+| ---------- | --------------------------------------- | ------------------------- |
+| Untracked  | File not tracked by Git                 | `git status`              |
+| Modified   | Changes made but not staged             | `git diff`                |
+| Staged     | Changes added to index, ready to commit | `git add <file>`          |
+| Committed  | Changes saved in local repo permanently | `git commit -m "message"` |
+
+---
