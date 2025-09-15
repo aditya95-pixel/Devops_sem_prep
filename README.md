@@ -198,3 +198,95 @@ print("Hello from feature branch")
 | Tools        | Kanban, Value Stream Mapping               | Scrum, XP, Kanban                      |
 
 ---
+
+## **Q4.A. What is DevOps?**
+
+* **DevOps** = **Development + Operations**.
+* It is a **culture, set of practices, and tools** that integrates software development (Dev) and IT operations (Ops).
+* Goal: **Shorter development cycles, faster delivery, high-quality software, continuous improvement**.
+* Key principles:
+
+  * **Collaboration** between Dev & Ops teams.
+  * **Automation** of builds, testing, deployment, and monitoring.
+  * **Continuous Integration & Continuous Delivery (CI/CD)**.
+  * **Feedback loops** for quick improvements.
+
+---
+
+## **Q4.B. Sample DevOps Architecture**
+
+### **Architecture Components**
+
+1. **Source Code Management (SCM)** → Version control with Git.
+2. **Build & Integration** → Automated builds using Jenkins, Maven, Gradle.
+3. **Testing** → Automated tests (JUnit, Selenium).
+4. **Deployment** → Containers (Docker), Orchestration (Kubernetes).
+5. **Configuration Management** → Tools like Ansible, Puppet.
+6. **Monitoring & Logging** → Prometheus, Grafana, ELK stack.
+7. **Collaboration** → Tools like Jira, Slack.
+
+### **Sample Flow (Pipeline)**
+
+```
+Plan → Code → Build → Test → Release → Deploy → Operate → Monitor → (Feedback → Plan)
+```
+
+---
+
+### **Diagram (Textual Representation)**
+
+```
+           +-------------------+
+           |    Plan (Jira)    |
+           +---------+---------+
+                     |
+                     v
+           +-------------------+
+           |   Code (GitHub)   |
+           +---------+---------+
+                     |
+                     v
+           +-------------------+
+           | Build (Jenkins)   |
+           +---------+---------+
+                     |
+                     v
+           +-------------------+
+           | Test (Selenium)   |
+           +---------+---------+
+                     |
+                     v
+           +-------------------+
+           | Release (Jenkins) |
+           +---------+---------+
+                     |
+                     v
+           +-------------------+
+           | Deploy (Docker)   |
+           +---------+---------+
+                     |
+                     v
+           +-------------------+
+           | Operate (Ansible) |
+           +---------+---------+
+                     |
+                     v
+           +-------------------+
+           | Monitor (Grafana) |
+           +-------------------+
+```
+
+---
+
+### **DevOps Lifecycle Parts**
+
+1. **Plan** → Requirements, backlog (tools: Jira, Trello).
+2. **Code** → Development & version control (Git, GitHub).
+3. **Build** → Compile & package (Maven, Jenkins).
+4. **Test** → Automated testing (Selenium, JUnit).
+5. **Release** → Ready for deployment (Jenkins pipelines).
+6. **Deploy** → Containers & orchestration (Docker, Kubernetes).
+7. **Operate** → Manage infra, ensure uptime (Ansible, Puppet).
+8. **Monitor** → Logs & metrics (Prometheus, ELK, Grafana).
+
+---
