@@ -561,3 +561,136 @@ git pull origin main
      ```
 
 ---
+
+# Module 2
+
+## **Q1. What is Continuous Integration? How can Jenkins help us to achieve it?**
+
+### **Continuous Integration (CI)**
+
+* **CI** is the practice of **merging all developers’ code changes frequently** (several times a day) into a shared repository.
+* Each integration is automatically **built and tested** to detect errors early.
+* Benefits:
+
+  * Early bug detection.
+  * Faster development.
+  * Ensures code always remains in a deployable state.
+
+### **How Jenkins Helps in CI**
+
+* Jenkins is an **open-source automation server**.
+* It automates:
+
+  1. **Code fetching** from GitHub/GitLab.
+  2. **Building** the project (Maven/Gradle).
+  3. **Running automated tests** (JUnit, Selenium).
+  4. **Providing reports** (success/failure).
+
+**Example Jenkins CI Job Flow**:
+
+```
+Developer → Push code to GitHub → Jenkins detects changes → Build → Test → Report
+```
+
+---
+
+## **Q2. What is Continuous Delivery?**
+
+* **Continuous Delivery (CD)** ensures that **code is always in a deployable state**, after passing through automated builds and tests.
+* The software is not deployed automatically but is **ready for release anytime**.
+* Requires a **manual approval step** before production deployment.
+* **Goal:** Minimize risk and make deployments routine and reliable.
+
+---
+
+## **Q3. What is Continuous Deployment and Continuous Delivery? How can Jenkins help us to achieve these?**
+
+### **Continuous Deployment**
+
+* Every code change that passes automated tests is **automatically deployed to production**.
+* No manual approval is needed.
+* Ensures rapid and frequent releases.
+
+### **Continuous Delivery**
+
+* Code is **kept deployable at all times** but **requires manual approval** to deploy.
+* Safer for organizations that want human checks before production.
+
+### **How Jenkins Helps**
+
+* Jenkins can be configured with **pipelines** to:
+
+  * **Build → Test → Package → Deploy** automatically.
+  * Use plugins like Docker, Kubernetes, AWS, Ansible to deploy applications.
+* With Jenkins:
+
+  * **Continuous Delivery** = automated pipeline until "ready for deployment", then manual approval.
+  * **Continuous Deployment** = fully automated pipeline including production release.
+
+---
+
+## **Q4. Difference Between Continuous Deployment and Continuous Delivery**
+
+| **Aspect**       | **Continuous Delivery**                           | **Continuous Deployment**                      |
+| ---------------- | ------------------------------------------------- | ---------------------------------------------- |
+| Deployment       | Manual approval before production release         | Automatic release to production                |
+| Automation Level | Build, test, staging automated; production manual | Build, test, staging, production all automated |
+| Risk Level       | Lower (human approval step)                       | Higher (fully automated, immediate changes)    |
+| Goal             | Software always deployable                        | Users always get latest changes                |
+
+---
+
+## **Q5. Create a Jenkins Pipeline to Push Local Repository to GitHub**
+
+### **Sample Jenkinsfile**
+
+```groovy
+pipeline {
+    agent any
+
+    stages {
+        stage('Checkout') {
+            steps {
+                git branch: 'main', url: 'https://github.com/username/repository.git'
+            }
+        }
+
+        stage('Build') {
+            steps {
+                sh 'echo "Building project..."'
+                // Example: sh 'mvn clean install'
+            }
+        }
+
+        stage('Test') {
+            steps {
+                sh 'echo "Running tests..."'
+                // Example: sh 'mvn test'
+            }
+        }
+
+        stage('Push to GitHub') {
+            steps {
+                withCredentials([usernamePassword(credentialsId: 'github-creds', usernameVariable: 'USER', passwordVariable: 'PASS')]) {
+                    sh '''
+                        git config user.email "you@example.com"
+                        git config user.name "Your Name"
+                        git add .
+                        git commit -m "Automated commit from Jenkins"
+                        git push https://${USER}:${PASS}@github.com/username/repository.git main
+                    '''
+                }
+            }
+        }
+    }
+}
+```
+
+### **Explanation**
+
+* **Checkout stage** → Pulls repo from GitHub.
+* **Build & Test stages** → Compile & test project.
+* **Push stage** → Commits and pushes code back to GitHub.
+* **withCredentials** → Uses Jenkins stored credentials (`github-creds`).
+
+---
