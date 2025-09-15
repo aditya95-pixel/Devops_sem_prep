@@ -61,10 +61,6 @@ Plan → Code → Build → Test → Release → Deploy → Operate → Monitor 
 
 ---
 
-Here’s the exam-ready Markdown answer for **Q2** 👇
-
----
-
 ## **Q2.A. What is Git?**
 
 * **Git** is a **distributed version control system (VCS)** used to track changes in source code.
