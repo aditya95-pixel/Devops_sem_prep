@@ -562,6 +562,91 @@ git pull origin main
 
 ---
 
+## **Q8. Version Control System (VCS)**
+
+* **Definition**:
+  A Version Control System (VCS) is a tool that **tracks changes to files and code over time**, allowing developers to collaborate, roll back to earlier versions, and maintain project history.
+
+* **Types**:
+
+  1. **Centralized VCS (CVCS)** → One central server (e.g., Subversion).
+  2. **Distributed VCS (DVCS)** → Each user has a full copy of the repository (e.g., Git).
+
+* **Difference between Git and GitHub**:
+
+| **Aspect**     | **Git**                                                                   | **GitHub**                                                     |
+| -------------- | ------------------------------------------------------------------------- | -------------------------------------------------------------- |
+| **Definition** | A **distributed version control system** to track changes in source code. | A **cloud-based hosting platform** for Git repositories.       |
+| **Usage**      | Runs locally on developer machines.                                       | Provides collaboration, remote storage, and integration tools. |
+| **Features**   | Branching, merging, commits, history.                                     | Pull requests, issues, CI/CD integration, code reviews.        |
+| **Example**    | `git init`, `git commit`                                                  | `https://github.com/user/repo.git`                             |
+
+---
+
+## **Q9. Key Principles of the DevOps SDLC Model**
+
+1. **Collaboration & Communication**
+
+   * Breaks silos between Dev and Ops teams.
+
+2. **Continuous Integration (CI)**
+
+   * Frequent code integration with automated testing.
+
+3. **Continuous Delivery/Deployment (CD)**
+
+   * Rapid, reliable delivery of features to production.
+
+4. **Automation**
+
+   * Automated builds, tests, deployments, monitoring.
+
+5. **Infrastructure as Code (IaC)**
+
+   * Manage infrastructure using code (Terraform, Ansible).
+
+6. **Monitoring & Feedback**
+
+   * Continuous monitoring and fast feedback loops.
+
+7. **Security (DevSecOps)**
+
+   * Embedding security at every stage of the lifecycle.
+
+---
+
+## **Q10. Benefits of DevOps Over Traditional SDLC Models**
+
+* **Faster Development & Deployment**
+
+  * Shorter release cycles vs long waterfall cycles.
+
+* **Improved Collaboration**
+
+  * Dev + Ops teams work together instead of isolated.
+
+* **Higher Quality Software**
+
+  * Automated testing and CI/CD → fewer bugs.
+
+* **Scalability & Flexibility**
+
+  * Cloud-native, containerized deployments scale easily.
+
+* **Reduced Failures**
+
+  * Continuous monitoring + feedback reduces downtime.
+
+* **Rapid Recovery**
+
+  * Quick rollbacks and fixes in case of failures.
+
+* **Customer Satisfaction**
+
+  * Faster delivery of features and updates.
+
+---
+
 # Module 2
 
 ## **Q1. What is Continuous Integration? How can Jenkins help us to achieve it?**
