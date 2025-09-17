@@ -1096,3 +1096,78 @@ pipeline {
 Tool management ensures **consistency, reproducibility, and automation** in the CI/CD pipeline.
 
 ---
+
+## **Q20. Configuring JDK and Maven in Jenkins Tools Section**
+
+To make a specific JDK version and Maven available for a Jenkins job:
+
+1. **Go to Tool Configuration**
+
+   * Navigate: `Dashboard → Manage Jenkins → Global Tool Configuration`.
+
+2. **Configure JDK**
+
+   * Scroll to **JDK** section → Click **Add JDK**.
+   * Uncheck **Install automatically** (if already installed manually).
+   * Provide a **Name** (e.g., `JDK11`) and installation path (e.g., `/usr/lib/jvm/java-11-openjdk`).
+
+3. **Configure Maven**
+
+   * Scroll to **Maven** section → Click **Add Maven**.
+   * Provide a **Name** (e.g., `MavenLatest`).
+   * Option 1: Check **Install automatically** → Jenkins will download Maven.
+   * Option 2: Give the path to an already installed Maven version.
+
+4. **Using JDK and Maven in the Project**
+
+   * While creating/configuring a job → under **Build Environment**, select the required **JDK**.
+   * In **Build Steps**, choose **Invoke top-level Maven targets** → pick the configured Maven installation.
+
+✅ This ensures **specific JDK version** + **any Maven version** are available for the project.
+
+---
+
+## **Q21. Creating a Jenkins Freestyle Job to Write a File**
+
+**Steps**:
+
+1. Go to Jenkins Dashboard → Click **New Item**.
+
+2. Enter a job name (e.g., `WriteTextJob`).
+
+3. Select **Freestyle Project** → Click **OK**.
+
+4. In job configuration:
+
+   * Scroll to **Build** section → Click **Add build step** → Select **Execute shell** (Linux/macOS) or **Execute Windows batch command** (Windows).
+   * Add script:
+
+   **Linux/macOS:**
+
+   ```bash
+   echo "Hello from Jenkins job!" > output.txt
+   ```
+
+   **Windows:**
+
+   ```bat
+   echo Hello from Jenkins job! > output.txt
+   ```
+
+5. Save job configuration.
+
+6. Click **Build Now** to run the job.
+
+**Where to Find the File**:
+
+* The generated `output.txt` will be stored in the **workspace** of the Jenkins job.
+* Path:
+
+  ```
+  <JENKINS_HOME>/workspace/<Job_Name>/output.txt
+  ```
+* To download:
+
+  * Go to Jenkins job → **Workspace** (left menu) → Click on `output.txt` → Download.
+
+---
