@@ -1516,3 +1516,131 @@ The Kubernetes architecture is split into the **Control Plane** components and t
   * **Container Runtime (e.g., Containerd, CRI-O)**: The software responsible for actually running the containers (e.g., pulling images, starting/stopping containers).
 
 -----
+
+### 21) What is a Kubernetes Pod?
+
+A **Kubernetes Pod** is the **smallest deployable unit of computing** that you can create and manage in Kubernetes.
+
+* A Pod represents a single instance of a running process in your cluster.
+* It typically contains one, or sometimes a few, closely related containers that share the same network namespace (IP address and port space) and storage resources (Volumes).
+* All containers within a Pod are deployed together on the same Node and can communicate with each other using `localhost`.
+
+---
+
+### 22) Elaborate Briefly on the Two Types of Pods
+
+Pods are generally categorized based on their usage pattern:
+
+1.  **Single-Container Pods**:
+    * This is the most common use case.
+    * The Pod contains a single container that runs the application's main process (e.g., a web server, a database).
+    * The Pod effectively wraps the container, adding the Kubernetes management layer.
+
+2.  **Multi-Container Pods (Sidecar Pattern)**:
+    * The Pod contains multiple containers that are tightly coupled and work together to serve a single application purpose.
+    * Common patterns include:
+        * **Sidecar**: A main application container and a secondary container that provides supporting services like logging, monitoring, or request routing (e.g., a container running a web app and a separate container that streams its logs to an external service).
+        * **Ambassador/Adapter**: Containers used for translating or adapting between the main application and the external world.
+
+---
+
+### 23) What is the Role of the Replication Controller?
+
+The **Replication Controller** is a now largely **deprecated** controller in Kubernetes, superseded by the **ReplicaSet**. Its role was to ensure that a specified number of Pod replicas were running at all times.
+
+* **Desired State Enforcement**: It watches the actual state of the cluster and compares it to the desired number of replicas defined in its manifest.
+* **Self-Healing**: If a running Pod fails, is deleted, or the node it resides on fails, the Replication Controller automatically **creates a new replacement Pod**.
+* **Scaling**: It handles scaling by creating or deleting Pods to match changes in the desired replica count.
+
+> **Note**: While the concept is still fundamental, the **ReplicaSet** is the modern successor used by **Deployments**.
+
+---
+
+### 24) With Respect to Kubernetes, What is a Volume?
+
+A **Volume** in Kubernetes is essentially a directory that is accessible to all containers within a Pod. It provides storage that is:
+
+* **Shared**: All containers in the Pod can access the same volume.
+* **Durable**: The data in the volume persists across container restarts within the Pod.
+* **Abstracted**: Volumes are an abstraction layer that links the Pod to various storage backends (e.g., local disk, network storage, cloud storage services).
+
+---
+
+### 25) Discuss Any Three Types of Kubernetes Volumes
+
+Kubernetes supports many volume types; here are three common ones:
+
+1.  **`emptyDir`**:
+    * **Purpose**: Provides a temporary, empty directory for a Pod.
+    * **Persistence**: The data is **lost** when the Pod is removed from a Node.
+    * **Usage**: Ideal for scratch space, temporary caches, or for data shared between containers in the same Pod.
+
+2.  **`hostPath`**:
+    * **Purpose**: Mounts a file or directory from the host Node's file system into the Pod.
+    * **Persistence**: Data persists on the host's filesystem even if the Pod is destroyed.
+    * **Usage**: Useful for running system-level tools or when access to the Node's resources is necessary (often avoided for portability and security reasons).
+
+3.  **`awsElasticBlockStore` (`awsEBS`) / `gcePersistentDisk` (`gcePD`) / `azureDisk`**:
+    * **Purpose**: Mounts cloud-provider-specific storage devices (e.g., AWS EBS volumes, Google PD) into the Pod.
+    * **Persistence**: Highly persistent; the data outlives the Pod and the Node.
+    * **Usage**: Required for stateful applications that need reliably persistent and durable storage in a cloud environment.
+
+---
+
+### 26) Explain What is Meant by Persistent Volume and Persistent Volume Claim
+
+These two objects are used together to provide a cluster-wide, abstract way of managing storage:
+
+| Concept | Description | Analogy |
+| :--- | :--- | :--- |
+| **Persistent Volume (PV)** | A piece of storage in the cluster that has been provisioned by an administrator or dynamically provisioned using a StorageClass. It represents the **physical storage resource** (e.g., a 10GB EBS volume). | A vacant apartment unit that the landlord (admin) has prepared. |
+| **Persistent Volume Claim (PVC)** | A request for storage by a user/application (Pod). It specifies the desired size and access mode (e.g., "I need 5GB of storage that can be read-write once"). | A tenant's lease application requesting a certain size of apartment. |
+
+The Kubernetes Control Plane matches the requirements of a **PVC** with an available **PV** (a process called **binding**), and then the Pod uses the PVC to mount the storage. This decouples the storage request from the underlying storage technology.
+
+---
+
+### 27) Describe the Architecture of a Kubernetes Cluster
+
+A Kubernetes cluster is composed of two main sets of components that work together to manage the containerized applications: the **Control Plane** (Master Nodes) and the **Worker Nodes**.
+
+#### 1. Control Plane (Master Nodes) 
+
+The Control Plane is the cluster's **brain**. It manages the overall state, makes global decisions (like scheduling), and responds to cluster events.
+
+* **Key Roles**:
+    * **API Server**: Exposes the Kubernetes API; the cluster's central communication hub.
+    * **etcd**: The distributed database storing the entire cluster configuration and state.
+    * **Scheduler**: Watches for new Pods and assigns them to a suitable Worker Node.
+    * **Controller Manager**: Runs various controllers to regulate the cluster's desired state (e.g., ensuring the right number of replicas is always running).
+
+#### 2. Worker Nodes (Compute Nodes) 
+
+The Worker Nodes are the machines that run the actual application workloads (Pods). They are managed by the Control Plane.
+
+* **Key Roles**:
+    * **Kubelet**: An agent on the Node that ensures containers are running in a Pod as instructed by the API Server.
+    * **Kube-Proxy**: Maintains network rules on the Node to allow network communication to Pods from inside and outside the cluster.
+    * **Container Runtime**: The engine that pulls and runs the containers (e.g., Docker, Containerd).
+
+---
+
+### 28) Differentiate Between Pods, ReplicaSets, and Deployments
+
+These three objects form the foundational hierarchy for running and managing applications in Kubernetes:
+
+| Object | Abstraction Level | Core Functionality | Direct Management? |
+| :--- | :--- | :--- | :--- |
+| **Pod** | Lowest | Represents a single instance of a running process; basic unit of deployment. | Usually **NOT** managed directly. |
+| **ReplicaSet** | Mid-Level | Ensures a stable set of identical Pod replicas are running at all times (scaling and self-healing). | Usually **NOT** managed directly. |
+| **Deployment** | Highest | Provides declarative updates for Pods and ReplicaSets; manages the desired state of the application over time. | **YES**, this is the main object users manage. |
+
+#### How They Work Together for High Availability and Scalability
+
+1.  **Deployment (The Manager)**: You define the application's *desired state* in a Deployment (e.g., "I want version 2.0 of my web app, with 3 replicas"). The Deployment object creates and manages a **ReplicaSet**.
+2.  **ReplicaSet (The Enforcer)**: The ReplicaSet takes the desired replica count from the Deployment and ensures that exactly **three Pods** are running. If a Pod fails, the ReplicaSet immediately creates a replacement (Self-Healing/High Availability).
+3.  **Pod (The Work Unit)**: The Pods are the actual running containers. They are disposable, but the ReplicaSet ensures the application is always available by maintaining the required count.
+
+This hierarchy allows users to focus on **Deployments** for management (like performing a zero-downtime rolling update to version 3.0), while the ReplicaSet handles the low-level tasks of **scaling** and **high availability**.
+
+---
