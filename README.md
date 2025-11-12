@@ -1268,7 +1268,7 @@ This architecture allows the Client and Daemon to run on the same system or on d
 
 ### 6\) What is Host Binding? Why is it so important for Docker? How can it be achieved?
 
-#### What is Host Binding? 🔗
+#### What is Host Binding? 
 
 **Host Binding**, in the context of Docker, refers to **port mapping** or **port forwarding**. It is the process of mapping a port inside a Docker container (the **container port**) to a port on the host machine where the Docker Daemon is running (the **host port**).
 
@@ -1373,5 +1373,146 @@ A **Docker Swarm** is a **container orchestration tool** that is natively includ
   * **Nodes**: Machines in the cluster are called **Nodes**; they can be **Manager Nodes** (responsible for orchestration and maintaining the desired state) or **Worker Nodes** (which run the actual container workloads).
   * **High Availability**: It ensures high service availability by automatically moving and restarting containers from a failed node to a healthy one.
   * **Load Balancing**: It features built-in load balancing to distribute incoming requests across the running container replicas.
+
+-----
+
+### 13\) Key Features of Docker Swarm
+
+**Docker Swarm** is Docker's native solution for container orchestration, offering a set of integrated features:
+
+  * **Integrated Orchestration**: Swarm Mode is built directly into the Docker Engine, making it easy to set up and use without external tools.
+  * **Decentralized Design**: It allows both **Manager** and **Worker** nodes to be managed using the standard Docker API and CLI.
+  * **Service Scaling and Load Balancing**:
+      * You can declare the desired number of container replicas (**scaling**).
+      * It includes internal **DNS-based load balancing** that distributes requests across all running containers within the cluster.
+  * **Desired State Reconciliation**: The Swarm Manager constantly monitors the cluster state and automatically restarts or reschedules containers to match the desired state declared by the user (e.g., if a host fails, its containers are moved).
+  * **Security by Default**: It automatically generates and manages TLS certificates for secure communication between nodes.
+  * **Rolling Updates**: It supports rolling updates for services, allowing you to deploy new versions of an application gradually without downtime.
+
+-----
+
+### 14\) What is a Swarm Node?
+
+A **Swarm Node** is a physical or virtual machine running the Docker Engine that has been initialized or joined to a **Docker Swarm** cluster. Nodes are the fundamental building blocks of the swarm and are categorized into two roles:
+
+1.  **Manager Nodes**:
+      * Maintain the desired state of the swarm and handle all orchestration tasks.
+      * Perform scheduling, service definition, and cluster management.
+      * In a multi-manager setup, they use the Raft consensus algorithm to ensure consistency.
+2.  **Worker Nodes**:
+      * The machines where the **actual container workloads** (tasks) are executed.
+      * Receive and execute tasks assigned by the Manager Nodes.
+      * Manager nodes can also be designated to run workloads.
+
+-----
+
+### 15\) Deleting All Docker Images
+
+To delete all Docker images from your environment, you must first ensure that no running or stopped containers are referencing them. The steps and commands are:
+
+| Step | Action | Necessary Command |
+| :--- | :--- | :--- |
+| **1. Stop all running containers (Optional but Recommended)** | Stop all currently running containers gracefully. | `docker stop $(docker ps -q)` |
+| **2. Delete all stopped containers** | Remove all containers that are no longer running. This frees up space and removes image references. | `docker rm $(docker ps -a -q)` |
+| **3. Delete all unused images** | The most efficient way: use the pruning command to delete all dangling and unreferenced images. | `docker image prune -a` **(Deletes all images)** |
+
+> **Alternative for Step 3**: If you prefer to manually remove them, you can force-remove all images: `docker rmi -f $(docker images -a -q)`
+
+-----
+
+### 16\) Listing Docker Containers
+
+  * **Command to list the running containers:**
+
+    The primary command to list containers that are currently in the **`Up`** (running) state is:
+
+    ```bash
+    docker ps
+    # or
+    docker container ls
+    ```
+
+  * **How to list all containers (running and non-running):**
+
+    To list all containers, including those that have been stopped or exited (non-running), you must use the **`-a`** (all) flag:
+
+    ```bash
+    docker ps -a
+    # or
+    docker container ls -a
+    ```
+
+-----
+
+### 17\) Detached Mode and Accessing Containers
+
+#### What is Detached Mode?
+
+**Detached mode** allows a container to run **in the background** (daemonized), freeing up the terminal from which the container was launched.
+
+  * When you run a container without any special flags, it runs in **foreground** mode, and the terminal output displays the container's logs and is tied to the container's main process.
+  * To run a container in detached mode, you use the **`-d`** flag with the `docker run` command:
+    ```bash
+    docker run -d <image_name>
+    ```
+
+#### How to Access a Container Running in Detached Mode?
+
+You can access a container running in detached mode using one of two primary methods:
+
+1.  **Attach to the Container's Main Process**:
+
+      * This reconnects your terminal's input/output to the container's main running process.
+      * **Command**: `docker attach <container_id_or_name>`
+
+2.  **Execute a new shell inside the Container (Recommended)**:
+
+      * This runs a **new process** (usually a shell like `bash` or `sh`) inside the running container, allowing interactive command execution without disrupting the main process.
+      * **Command**: `docker exec -it <container_id_or_name> /bin/bash`
+          * `-i`: Keeps STDIN open even if not attached.
+          * `-t`: Allocates a pseudo-TTY (terminal).
+
+-----
+
+### 18\) What is Kubernetes?
+
+**Kubernetes (K8s)** is an open-source system designed for **automating deployment, scaling, and management of containerized applications**.
+
+  * It provides a platform-agnostic framework for running and managing workloads across a cluster of machines.
+  * Unlike Docker Swarm, which is integrated with the Docker Engine, Kubernetes is a robust, external tool designed to handle complex, large-scale application deployments across various cloud providers and bare-metal installations.
+  * It operates on the principle of **declarative configuration**, where you describe the *desired state* of your application, and Kubernetes works to maintain that state automatically.
+
+-----
+
+### 19\) Explain the Kubernetes Architecture
+
+Kubernetes follows a **Master-Worker (Control Plane-Node)** architecture. It consists of a set of machines working together to run containerized applications:
+
+#### 1\. Control Plane (The Master) 
+
+The Control Plane is responsible for managing the cluster's state, scheduling, and ensuring the cluster maintains the desired configuration.
+
+#### 2\. Worker Nodes (The Minions) 
+
+The Worker Nodes are the machines that run the actual container workloads (in **Pods**). They are managed by the Control Plane.
+
+-----
+
+### 20\) What are the Key Components of the Kubernetes Architecture?
+
+The Kubernetes architecture is split into the **Control Plane** components and the **Node** components:
+
+#### Control Plane Components (The Brain)
+
+  * **API Server (`kube-apiserver`)**: The frontend for the Control Plane. It exposes the Kubernetes API and is the central management point. All internal and external communication goes through it.
+  * **etcd**: A distributed, highly available **key-value store** that serves as Kubernetes' cluster configuration and state database.
+  * **Scheduler (`kube-scheduler`)**: Watches for new **Pods** and selects the best Node for them to run on, based on resource requirements, constraints, and policy.
+  * **Controller Manager (`kube-controller-manager`)**: Runs various controller processes (e.g., Replication Controller, Node Controller) that regulate the cluster's state and drive it toward the desired state.
+
+#### Node Components (The Hands)
+
+  * **Kubelet**: An agent that runs on every Worker Node. It communicates with the Control Plane, ensures containers are running in a Pod, and reports node status.
+  * **Kube-Proxy (`kube-proxy`)**: Maintains network rules on Nodes. It handles networking and service discovery, allowing communication to Pods from inside or outside the cluster.
+  * **Container Runtime (e.g., Containerd, CRI-O)**: The software responsible for actually running the containers (e.g., pulling images, starting/stopping containers).
 
 -----
