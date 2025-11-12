@@ -1889,3 +1889,133 @@ users:
     groups: [webteam]
     state: absent
 ```
+
+### 14\. Ansible Ad-Hoc Command for Reboot
+
+To reboot all servers in the inventory group `sys123`, you would use the following ad-hoc command, leveraging the **`reboot`** module:
+
+```bash
+ansible sys123 -m reboot
+```
+
+| Component | Function |
+| :--- | :--- |
+| `ansible` | The Ansible command-line utility. |
+| `sys123` | Targets the specific group named `sys123` in the inventory. |
+| `-m reboot` | Specifies the **module** to use, which safely reboots the managed node and waits for it to come back online. |
+
+-----
+
+### 15\. Command to Execute an Ansible Playbook
+
+The command used to execute an Ansible playbook is **`ansible-playbook`**.
+
+```bash
+ansible-playbook <playbook_name>.yml
+```
+
+| Component | Function |
+| :--- | :--- |
+| `ansible-playbook` | The dedicated command for running YAML playbooks. |
+| `<playbook_name>.yml` | The path and filename of the playbook you want to execute. |
+
+-----
+
+### 16\. What is an Ansible Inventory File? What is the Significance of It?
+
+An **Ansible Inventory File** is a plain text file (typically named `hosts` or `inventory.ini`) that lists the **Managed Nodes** (servers, network devices, etc.) that Ansible can connect to and automate.
+
+#### Significance
+
+The Inventory file is fundamentally important because it:
+
+  * **Defines Target Servers**: It tells Ansible **which machines to manage**.
+  * **Groups Hosts**: It allows you to organize hosts into logical **groups** (e.g., `webservers`, `databases`) so that tasks in a playbook can be targeted precisely.
+  * **Stores Variables**: It is used to define connection and configuration **variables** specific to individual hosts or entire groups (e.g., SSH user, port number, application version).
+  * **Separates Code from Data**: It keeps the list of infrastructure targets separate from the automation logic (the playbook).
+
+-----
+
+### 17\. Playbook to Print System Date for the "localhost" Group
+
+Assuming the inventory file structure is:
+
+```ini
+[localhost]
+127.0.0.1 ansible_connection=local
+```
+
+Here is the Ansible playbook (`print_date.yml`) to print the system date for all systems in the **`localhost`** group, using the **`command`** module:
+
+```yaml
+---
+- name: Print system date on localhost
+  hosts: localhost
+  gather_facts: false # Optional: skip gathering facts for a faster run
+
+  tasks:
+    - name: Execute the 'date' command
+      ansible.builtin.command: date
+      register: system_date_output
+
+    - name: Print the date output to the terminal
+      ansible.builtin.debug:
+        msg: "The current system date on {{ inventory_hostname }} is: {{ system_date_output.stdout }}"
+```
+
+-----
+
+### 18\. What are Ansible Roles? Explain its Significance with an Example.
+
+**Ansible Roles** are the standard way to organize and package related automation content (tasks, handlers, variables, files, and templates) into a standardized, reusable, and portable structure.
+
+#### Significance
+
+The significance of roles lies in:
+
+1.  **Reusability**: A well-defined role (e.g., `install_nginx`) can be easily shared and applied across multiple projects or environments.
+2.  **Organization**: They enforce a best-practice directory structure, making complex automation scripts easier to understand, manage, and scale.
+3.  **Portability**: Roles can be easily downloaded and installed via **Ansible Galaxy** (a repository for roles).
+
+#### Example
+
+Instead of defining dozens of tasks for installing and configuring a web server directly in a single playbook, you can use a role:
+
+  * **Role**: **`webserver_setup`**
+  * **Role Files**:
+      * `tasks/main.yml`: Install Nginx package, Copy Nginx configuration file.
+      * `handlers/main.yml`: Restart Nginx service.
+      * `defaults/main.yml`: Define the default web port as `80`.
+
+**Playbook Usage:**
+
+```yaml
+- hosts: webservers
+  roles:
+    - webserver_setup
+```
+
+By using the role, the playbook remains clean, and the complex configuration logic is neatly contained within the `webserver_setup` role.
+
+-----
+
+### 19\. Protocol and Windows OS Support
+
+#### Protocol for Remote Management
+
+The primary protocol used by Ansible to manage remote machines is **SSH (Secure Shell)** for Linux/Unix-like systems.
+
+For Windows servers, Ansible uses **WinRM (Windows Remote Management)**.
+
+#### Is Ansible Supported by Windows O.S.?
+
+  * **Control Machine**: Ansible must be installed and run from a **Linux/Unix-like** system (including macOS or the Windows Subsystem for Linux - WSL). It does **not** run natively as the Control Machine on Windows.
+  * **Managed Node**: Ansible **fully supports managing Windows machines** by using the **WinRM** protocol. This allows Ansible to configure, deploy to, and manage Windows servers and desktops.
+
+-----
+
+### 20\. What is an Ansible Inventory?
+
+**Ansible Inventory** is the list of **managed hosts** (servers, nodes) that Ansible is configured to automate. It is typically a static file (`.ini` or `.yaml` format) but can also be dynamically generated from cloud providers (AWS, Azure, etc.) or CMDBs using **dynamic inventory** scripts.
+
+The inventory provides the necessary information for Ansible to connect, including hostnames, IP addresses, and group assignments.
