@@ -2019,3 +2019,132 @@ For Windows servers, Ansible uses **WinRM (Windows Remote Management)**.
 **Ansible Inventory** is the list of **managed hosts** (servers, nodes) that Ansible is configured to automate. It is typically a static file (`.ini` or `.yaml` format) but can also be dynamically generated from cloud providers (AWS, Azure, etc.) or CMDBs using **dynamic inventory** scripts.
 
 The inventory provides the necessary information for Ansible to connect, including hostnames, IP addresses, and group assignments.
+
+### 21\. Differentiate Between Static and Dynamic Inventory
+
+Ansible uses an **Inventory** to determine which machines it manages. This inventory can be defined in two ways: static or dynamic.
+
+| Feature | Static Inventory | Dynamic Inventory |
+| :--- | :--- | :--- |
+| **Definition** | A plain text file (INI or YAML) where host information is **manually entered and permanently stored**. | A script or plugin that **generates host information on-demand** by querying an external source. |
+| **Updating** | Requires **manual editing** of the file whenever a server is added, removed, or changed. | **Automatically updates** when the external source changes (e.g., a new VM spins up in the cloud). |
+| **Use Case** | Small, fixed environments, on-premise servers with minimal changes, or lab setups. | Large, cloud-based, or highly volatile environments (e.g., AWS, Azure, VMware) where hosts scale frequently. |
+| **Example File** | `hosts` file: <br> `[webservers]` <br> `192.168.1.10` <br> `serverA.local` | A Python script that queries an **AWS EC2 API** to list all running instances tagged as 'web'. |
+
+-----
+
+### 22\. Steps to Set Up a Master-Slave Architecture in Ansible
+
+The term "Master-Slave" is outdated in Ansible; the correct terms are **Control Node** and **Managed Node(s)**. Ansible is **agentless**, so the setup involves configuration, not complex installation.
+
+1.  **Prepare the Control Node (The Master):**
+
+      * **Install Ansible:** Install the Ansible package on the designated Control Node (usually a Linux machine).
+      * **Install Dependencies:** Ensure Python and SSH are available.
+      * **Generate SSH Keys:** Create an SSH key pair (`ssh-keygen`) on the Control Node.
+
+2.  **Prepare the Managed Nodes (The Slaves):**
+
+      * **Configure SSH:** Ensure the Managed Nodes have an SSH server running (standard for Linux).
+      * **Add Public Key:** Copy the Control Node's public SSH key to the `~/.ssh/authorized_keys` file of the user that Ansible will use on the Managed Nodes. This enables **passwordless SSH**.
+      * **Windows (if applicable):** Configure WinRM service and ensure PowerShell is set up to accept Ansible connections.
+
+3.  **Create the Inventory:**
+
+      * Create an inventory file (e.g., `hosts`) on the Control Node listing all Managed Nodes and their groups.
+      * *Example:*
+        ```ini
+        [web]
+        server1.example.com
+        server2.example.com
+
+        [all:vars]
+        ansible_user=devops_user 
+        ```
+
+4.  **Verify Connectivity:**
+
+      * Test the connection using the `ping` module as an ad-hoc command:
+        ```bash
+        ansible all -m ping
+        ```
+
+Once connectivity is verified, the architecture is set up, and you can begin running playbooks from the Control Node.
+
+-----
+
+### 23\. Sample Ansible Ad-hoc Command to Install a Package
+
+This ad-hoc command uses the `apt` module to install the `nginx` web server package on all machines in the group named `webservers`.
+
+```bash
+ansible webservers -b -m apt -a "name=nginx state=present"
+```
+
+| Component | Explanation |
+| :--- | :--- |
+| **`ansible`** | The command-line program to run ad-hoc tasks. |
+| **`webservers`** | The **target host group** specified in the inventory file. |
+| **`-b`** | The shorthand for `--become`, instructing Ansible to use **privilege escalation** (e.g., `sudo`) to gain root access for installation. |
+| **`-m apt`** | Specifies the **module** to use, which is `apt` (for Debian/Ubuntu-based systems). |
+| **`-a "..."`** | Specifies the **arguments** passed to the `apt` module. `name=nginx` sets the package name, and `state=present` ensures the package is installed. |
+
+-----
+
+### 24\. What are Ansible Modules? Explain with Two Examples.
+
+**Ansible Modules** are small, reusable units of code (scripts) that perform specific tasks on remote managed nodes. They are the core mechanism through which Ansible executes actions.
+
+  * **Idempotence**: Most modules are designed to be **idempotent**, meaning they can be run multiple times without causing unintended side effects (they only make changes if the system is not already in the desired state).
+  * **Execution**: For every task in a playbook, Ansible pushes the corresponding module to the remote host, executes it, and then removes it.
+
+| Module | Purpose | Example Task |
+| :--- | :--- | :--- |
+| **`ansible.builtin.copy`** | **File Transfer**: Copies files from the Control Node to the Managed Node. | ` yaml - name: Copy configuration file copy: src: /local/file.conf dest: /etc/app/file.conf owner: root group: root mode: '0644'  ` |
+| **`ansible.builtin.service`** | **Service Management**: Manages system services (starting, stopping, restarting, enabling, or disabling them). | ` yaml - name: Ensure Nginx service is running service: name: nginx state: started enabled: true  ` |
+
+-----
+
+### 25\. Compare “include” and “import” Statements in Ansible Playbooks
+
+In Ansible, both `include` and `import` are used to reference and reuse files containing tasks (or other play structure elements) within a main playbook. The key difference lies in **when** the files are processed.
+
+| Feature | `import_tasks` (Static Import) | `include_tasks` (Dynamic Include) |
+| :--- | :--- | :--- |
+| **Processing Time**| **Pre-Processed (Static):** The imported file is processed during the playbook's **parsing phase** (before the playbook execution starts). | **Runtime (Dynamic):** The included file is processed and inserted into the task list during the playbook's **execution phase**. |
+| **Variables** | Variables and loops defined **on the import statement** cannot be used to control the import (e.g., looping over the imported file). | Allows variables and loops (`loop:`) to be used **directly on the include statement** to dynamically include files or execute them multiple times. |
+| **Error Handling**| Any syntax errors in the imported file are caught **immediately** at the start of the playbook run. | Syntax errors may only be caught **at the moment the include statement is executed**. |
+| **Best Practice**| Preferred for **basic, static file inclusion** (e.g., including a file containing a list of common setup tasks). | Preferred when using **loops (`loop` or `with_items`) to iterate over the included file** based on a list or dictionary. |
+
+-----
+
+### 26\. Explain the Structure of an Ansible Role with an Example Directory Hierarchy
+
+An **Ansible Role** is a specialized directory structure that defines automation content based on a standardized, predictable hierarchy. This structure allows Ansible to automatically find variables, tasks, handlers, and other files when a role is invoked in a playbook.
+
+#### Significance of the Structure
+
+Each subdirectory serves a specific purpose, promoting modularity and reusability. When a playbook uses a role, Ansible knows exactly which files to look for in which directories.
+
+#### Example Directory Hierarchy
+
+If you create a role named `mysql_server`, its structure will look like this:
+
+```
+roles/
+└── mysql_server/
+    ├── defaults/
+    │   └── main.yml      # Default variables (lowest precedence)
+    ├── handlers/
+    │   └── main.yml      # Tasks that are run ONLY when notified (e.g., restarting MySQL)
+    ├── tasks/
+    │   └── main.yml      # THE PRIMARY list of tasks to run (e.g., install package, set root password)
+    ├── templates/
+    │   └── my.cnf.j2     # Jinja2 templates (dynamic configuration files)
+    ├── files/
+    │   └── backup.sh     # Static files to be copied (e.g., a backup script)
+    ├── vars/
+    │   └── main.yml      # Variables (higher precedence than defaults)
+    └── meta/
+        └── main.yml      # Role metadata and dependencies (e.g., dependencies on other roles)
+```
