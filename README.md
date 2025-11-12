@@ -1171,3 +1171,130 @@ To make a specific JDK version and Maven available for a Jenkins job:
   * Go to Jenkins job → **Workspace** (left menu) → Click on `output.txt` → Download.
 
 ---
+
+# Module 3
+
+### 1\) Short Notes
+
+#### (i) Docker
+
+**Docker** is an open-source platform that enables developers to **build, ship, and run** applications in a reproducible manner using **containers**. It packages an application and all its dependencies (libraries, system tools, code, runtime) into a single, isolated unit. This ensures the application works reliably across different computing environments (developer's laptop, testing server, production cloud).
+
+#### (ii) Image
+
+A **Docker Image** is a **read-only template** used to create containers. It contains the application's code, libraries, dependencies, and environment configuration needed to run the application. Images are built from a set of instructions defined in a **Dockerfile** and can be stored in a registry like **Docker Hub**.
+
+#### (iii) Container
+
+A **Docker Container** is a **runnable instance** of a Docker Image. It represents the actual isolated, operational environment where the application executes. Containers are lightweight, isolated from the host system and other containers, and include everything needed to run the software. They are the standard unit of software deployment in the Docker ecosystem.
+
+-----
+
+### 2\) What is Virtualization and Containerization?
+
+#### Virtualization 
+
+**Virtualization** is the technology of creating a **virtual version** of a resource, such as a server, operating system, storage device, or network resource. This is typically achieved using a **Hypervisor** (like VMware or VirtualBox), which allows a single physical machine (**Host**) to run multiple independent operating systems (**Guest OS/Virtual Machines or VMs**). Each VM includes its own OS kernel, binaries, and libraries, making it entirely isolated.
+
+#### Containerization 
+
+**Containerization** is a lightweight form of virtualization where the applications share the host operating system's kernel. The application and its dependencies are bundled into an **isolated container**. Unlike VMs, containers do not require a full OS for each instance, making them much faster to start, consume less memory, and be more portable. Tools like Docker and Kubernetes leverage this technology.
+
+-----
+
+### 3\) Differentiate Virtualization and Containerization
+
+| Feature | Virtualization (VMs) | Containerization (Docker) |
+| :--- | :--- | :--- |
+| **Operating System** | Each VM has its own **Guest OS** (including kernel). | Containers **share the Host OS kernel**. |
+| **Isolation** | Strong isolation, done at the OS/hardware level. | Moderate isolation, done at the OS kernel level. |
+| **Startup Time** | Slow (minutes), as the full OS needs to boot. | Fast (seconds or less), as only the app starts. |
+| **Resource Usage** | High (CPU, RAM, Disk) due to multiple OS copies. | Low/Lightweight, only consuming resources for the app. |
+| **Size** | Large (GBs). | Small (MBs/tens of MBs). |
+| **Hypervisor** | Required (e.g., KVM, Xen, VMware). | Not required, uses a Container Runtime (e.g., Docker Engine). |
+| **Portability** | Less portable due to OS size and dependency on Hypervisor. | Highly portable across any OS running a container runtime. |
+
+-----
+
+### 4\) Explain the Life Cycle of a Docker Container
+
+The life cycle of a Docker container typically involves four main stages:
+
+1.  **Creation (`docker create`)**:
+
+      * A container is created from a specified **Image**.
+      * A writeable layer is added on top of the image's read-only layers.
+      * The container is allocated resources and assigned an ID. The container is now in the **`Created`** state.
+
+2.  **Running (`docker start`/`docker run`)**:
+
+      * The **`docker start`** command moves the container from `Created` to the **`Running`** state.
+      * The container's main process starts executing, and it becomes fully operational.
+      * The **`docker run`** command is a shortcut that performs both `create` and `start`.
+
+3.  **Pausing/Stopping (`docker pause`/`docker stop`)**:
+
+      * **Pausing** puts the container in a **`Paused`** state, temporarily suspending all its processes without terminating them.
+      * **Stopping** sends a `SIGTERM` signal to the main process (graceful shutdown). If the process doesn't exit, Docker sends a `SIGKILL` (forceful termination). The container moves to the **`Exited`** state.
+
+4.  **Removal (`docker rm`)**:
+
+      * A container in the `Exited` state (or `Created`) can be removed using **`docker rm`**.
+      * This permanently deletes the container's writeable layer and cleans up associated resources. The container ceases to exist.
+
+-----
+
+### 5\) What are the Core Components of Docker? Describe its Architecture.
+
+#### Core Components
+
+The Docker platform primarily consists of three core components:
+
+1.  **Docker Daemon (Server)**: The background service running on the host OS. It manages the lifecycle of Docker objects like images, containers, networks, and volumes.
+2.  **Docker Client**: The command-line tool (`docker`) that users interact with. It communicates with the Daemon using a REST API over a socket or network interface.
+3.  **Docker Registry**: A central repository for storing and distributing Docker Images (e.g., Docker Hub).
+
+#### Docker Architecture
+
+Docker uses a **client-server architecture**.
+
+  * **Client-Server Interaction**: The **Docker Client** sends commands (e.g., `docker run`, `docker pull`) to the **Docker Daemon**. The Daemon handles the heavy lifting.
+  * **Daemon's Role**: The Daemon listens for API requests and manages Docker objects. It can pull images from a **Registry**, build images, and run/manage containers.
+  * **Registries (Docker Hub)**: When a Client instructs the Daemon to pull an image, the Daemon interacts with the Registry.
+
+This architecture allows the Client and Daemon to run on the same system or on different systems, communicating remotely.
+
+-----
+
+### 6\) What is Host Binding? Why is it so important for Docker? How can it be achieved?
+
+#### What is Host Binding? 🔗
+
+**Host Binding**, in the context of Docker, refers to **port mapping** or **port forwarding**. It is the process of mapping a port inside a Docker container (the **container port**) to a port on the host machine where the Docker Daemon is running (the **host port**).
+
+#### Why is it Important for Docker?
+
+By default, Docker containers are isolated and run on their own internal network. Without port binding:
+
+  * The services running inside the container (e.g., a web server on port 80) would be **inaccessible** from outside the container, including from the host machine or external networks.
+  * Host Binding acts as a **gateway**, allowing external users/applications to access the service inside the container using the host machine's IP address and the mapped host port.
+
+#### How Can it Be Achieved?
+
+Host Binding is achieved using the **`-p`** or **`--publish`** flag with the `docker run` command. The syntax is typically:
+
+```bash
+docker run -p [host_port]:[container_port] [image_name]
+```
+
+**Example:**
+
+To run a web server in a container (running on port 80) and make it accessible via the host machine's port 8080:
+
+```bash
+docker run -d -p 8080:80 nginx:latest
+```
+
+The service can now be accessed by pointing a web browser to `http://localhost:8080`.
+
+-----
